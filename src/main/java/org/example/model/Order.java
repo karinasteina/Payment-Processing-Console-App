@@ -15,18 +15,31 @@ public class Order {
         this.status = OrderStatus.NEW;
     }
 
-    public void addItem(OrderItem item){
-        // TODO: prevent adding items if order is already paid
+    public void addItem(OrderItem item) throws Exception{
+        if(status.equals(OrderStatus.PAID)){
+            throw new Exception("Cannot add new items, because order is already paid");
+        }
         items.add(item);
     }
 
-    public double calculateTotal(){
-        // TODO: calculate total from all order items (including discounts)
-        return 0;
+    public double calculateTotal() throws Exception{
+        if(items == null || items.isEmpty()){
+            throw new Exception("Incorrect params");
+        }
+        double total = 0;
+
+        for(OrderItem item: items){
+            total += item.calculateTotal();
+        }
+
+        return discount.apply(total);
+
     }
 
-    public void markAsPaid(){
-        // TODO: validate order is not empty
+    public void markAsPaid() throws Exception{
+        if(items.isEmpty()){
+            throw new Exception("Order is empty");
+        }
         this.status = OrderStatus.PAID;
     }
 
@@ -41,15 +54,19 @@ public class Order {
     public List<OrderItem> getItems() {
         return items;
     }
+
     public String getCustomerName() {
         return customerName;
     }
+
     public OrderStatus getStatus() {
         return status;
     }
+
     public static Builder builder(){
         return new Builder();
     }
+
     public static class Builder{
         private String customerName;
         private List<OrderItem> items = new ArrayList<>();
@@ -57,12 +74,17 @@ public class Order {
             this.customerName = customerName;
             return this;
         }
+
         public Builder addItem(OrderItem item){
             this.items.add(item);
             return this;
         }
-        public Order build(){
-            // TODO: validate customerName
+
+        public Order build() throws Exception{
+            if(customerName == null || customerName.isBlank()){
+                throw new Exception("Incorrect params");
+            }
+
             return new Order(this);
         }
     }
