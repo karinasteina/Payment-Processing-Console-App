@@ -1,5 +1,7 @@
 package org.example.model;
 
+import org.example.config.AppConfig;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,9 @@ public class Order {
             total += item.calculateTotal();
         }
 
-        return discount.apply(total);
+        double discountTotal = discount.apply(total);
+
+        return discountTotal + (discountTotal * AppConfig.getInstance().getTaxRate());
 
     }
 
