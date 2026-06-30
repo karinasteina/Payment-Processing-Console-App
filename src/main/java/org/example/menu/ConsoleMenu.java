@@ -2,17 +2,22 @@ package org.example.menu;
 
 import org.example.config.AppConfig;
 import org.example.model.Order;
+import org.example.model.OrderHistory;
 import org.example.model.OrderItem;
 import org.example.model.PaymentResult;
 import org.example.payment.PaymentMethod;
 import org.example.payment.PaymentMethodFactory;
 import org.example.payment.PaymentProcessor;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleMenu {
     private final Scanner scanner = new Scanner(System.in);
     private final PaymentProcessor paymentProcessor = new PaymentProcessor();
+    private List<OrderHistory> orderHistory = new ArrayList<>();
 
     private Order currentOrder;
 
@@ -59,6 +64,8 @@ public class ConsoleMenu {
                 case 4 -> {
                     try {
                         payOrder();
+                        OrderHistory order = new OrderHistory(currentOrder, LocalDate.now());
+                        orderHistory.add(order);
 
                     }catch (Exception e){
                         System.out.println(e.getMessage());
@@ -66,12 +73,18 @@ public class ConsoleMenu {
                     }
 
                 }
+                case 5 -> printHelper(orderHistory);
                 case 0 -> running = false;
                 default -> System.out.println("Invalid option");
             }
         }
     }
 
+    private void printHelper(List<?> list){
+        for(Object obj : list){
+            System.out.println(obj);
+        }
+    }
     private void createOrder() throws Exception {
         System.out.println("Customer name:");
         String customerName = scanner.nextLine();
@@ -183,6 +196,7 @@ public class ConsoleMenu {
                 2. Add item to order
                 3. View order
                 4. Pay order
+                5. See order history
                 0. Exit
                 """);
     }

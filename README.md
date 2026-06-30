@@ -24,4 +24,4 @@ User should be able to:
 ## Stretch goals
 - Add a new payment method, for example crypto payment or bank transfer - DONE
 - Add tax calculation using AppConfig - DONE
-- Save completed orders in memory
+- Save completed orders in memory - DONE
