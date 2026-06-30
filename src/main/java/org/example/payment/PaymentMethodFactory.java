@@ -12,5 +12,8 @@ public class PaymentMethodFactory {
     public static PaymentMethod createGiftCardPayment(String code, double balance){
         return new GiftCardPayment(code, balance);
     }
+    public static PaymentMethod createBankTransferPayment(String bankAccountNumber){
+        return new BankTransferPayment(bankAccountNumber);
+    }
 
 }

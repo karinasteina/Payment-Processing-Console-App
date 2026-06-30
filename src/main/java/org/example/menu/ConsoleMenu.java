@@ -27,17 +27,52 @@ public class ConsoleMenu {
             int option = Integer.parseInt(scanner.nextLine());
 
             switch (option){
-                case 1 -> createOrder();
-                case 2 -> addItem();
-                case 3 -> viewOrder();
-                case 4 -> payOrder();
+                case 1 -> {
+                    try{
+                        createOrder();
+
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                        System.out.println("--------------------");
+                    }
+
+                }
+                case 2 -> {
+                    try {
+                        addItem();
+
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                        System.out.println("--------------------");
+                    }
+                }
+                case 3 ->{
+                    try{
+                        viewOrder();
+
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                        System.out.println("--------------------");
+                    }
+
+                }
+                case 4 -> {
+                    try {
+                        payOrder();
+
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                        System.out.println("--------------------");
+                    }
+
+                }
                 case 0 -> running = false;
                 default -> System.out.println("Invalid option");
             }
         }
     }
 
-    private void createOrder(){
+    private void createOrder() throws Exception {
         System.out.println("Customer name:");
         String customerName = scanner.nextLine();
 
@@ -91,6 +126,7 @@ public class ConsoleMenu {
                 1. Credit Card
                 2. PayPal
                 3. Gift Card
+                4. Bank Transfer
                 """);
         int option = Integer.parseInt(scanner.nextLine());
 
@@ -98,6 +134,7 @@ public class ConsoleMenu {
             case 1 -> createCreditCardPayment();
             case 2 -> createPaypalPayment();
             case 3 -> createGiftCardPayment();
+            case 4 -> createBankTransferPayment();
             default -> throw new IllegalArgumentException("Invalid payment method");
         };
 
@@ -131,6 +168,13 @@ public class ConsoleMenu {
         scanner.nextLine();
 
         return PaymentMethodFactory.createGiftCardPayment(code, balance);
+    }
+
+    private PaymentMethod createBankTransferPayment(){
+        System.out.println("Bank account number:");
+        String bankAccountNumber = scanner.nextLine();
+
+        return PaymentMethodFactory.createBankTransferPayment(bankAccountNumber);
     }
 
     private void printMenu(){
