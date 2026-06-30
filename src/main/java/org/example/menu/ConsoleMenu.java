@@ -2,17 +2,22 @@ package org.example.menu;
 
 import org.example.config.AppConfig;
 import org.example.model.Order;
+import org.example.model.OrderHistory;
 import org.example.model.OrderItem;
 import org.example.model.PaymentResult;
 import org.example.payment.PaymentMethod;
 import org.example.payment.PaymentMethodFactory;
 import org.example.payment.PaymentProcessor;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleMenu {
     private final Scanner scanner = new Scanner(System.in);
     private final PaymentProcessor paymentProcessor = new PaymentProcessor();
+    private List<OrderHistory> orderHistory = new ArrayList<>();
 
     private Order currentOrder;
 
@@ -27,17 +32,62 @@ public class ConsoleMenu {
             int option = Integer.parseInt(scanner.nextLine());
 
             switch (option){
-                case 1 -> createOrder();
-                case 2 -> addItem();
-                case 3 -> viewOrder();
-                case 4 -> payOrder();
+                case 1 -> {
+                    try{
+                        createOrder();
+
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                        System.out.println("--------------------");
+                    }
+
+                }
+                case 2 -> {
+                    try {
+                        addItem();
+
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                        System.out.println("--------------------");
+                    }
+                }
+                case 3 ->{
+                    try{
+                        viewOrder();
+
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                        System.out.println("--------------------");
+                    }
+
+                }
+                case 4 -> {
+                    try {
+                        payOrder();
+                        if(currentOrder.isPaid()){
+                            OrderHistory order = new OrderHistory(currentOrder, LocalDate.now());
+                            orderHistory.add(order);
+                        }
+
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                        System.out.println("--------------------");
+                    }
+
+                }
+                case 5 -> printHelper(orderHistory);
                 case 0 -> running = false;
                 default -> System.out.println("Invalid option");
             }
         }
     }
 
-    private void createOrder(){
+    private void printHelper(List<?> list){
+        for(Object obj : list){
+            System.out.println(obj);
+        }
+    }
+    private void createOrder() throws Exception {
         System.out.println("Customer name:");
         String customerName = scanner.nextLine();
 
@@ -91,6 +141,7 @@ public class ConsoleMenu {
                 1. Credit Card
                 2. PayPal
                 3. Gift Card
+                4. Bank Transfer
                 """);
         int option = Integer.parseInt(scanner.nextLine());
 
@@ -98,6 +149,7 @@ public class ConsoleMenu {
             case 1 -> createCreditCardPayment();
             case 2 -> createPaypalPayment();
             case 3 -> createGiftCardPayment();
+            case 4 -> createBankTransferPayment();
             default -> throw new IllegalArgumentException("Invalid payment method");
         };
 
@@ -133,12 +185,20 @@ public class ConsoleMenu {
         return PaymentMethodFactory.createGiftCardPayment(code, balance);
     }
 
+    private PaymentMethod createBankTransferPayment(){
+        System.out.println("Bank account number:");
+        String bankAccountNumber = scanner.nextLine();
+
+        return PaymentMethodFactory.createBankTransferPayment(bankAccountNumber);
+    }
+
     private void printMenu(){
         System.out.println("""
                 1. Create order
                 2. Add item to order
                 3. View order
                 4. Pay order
+                5. See order history
                 0. Exit
                 """);
     }
