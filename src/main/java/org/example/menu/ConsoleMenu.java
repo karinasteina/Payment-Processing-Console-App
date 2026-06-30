@@ -47,8 +47,10 @@ public class ConsoleMenu {
         System.out.println("Order created for " + customerName);
     }
 
-    private void addItem(){
-        // TODO: check if order exists
+    private void addItem() throws Exception{
+        if(currentOrder == null){
+            throw new Exception("Order is empty");
+        }
 
         System.out.println("Item name:");
         String itemName = scanner.nextLine();
@@ -63,8 +65,10 @@ public class ConsoleMenu {
         System.out.println("Item added to order");
     }
 
-    private void viewOrder(){
-        // TODO: check if order exists
+    private void viewOrder() throws Exception{
+        if(currentOrder == null){
+            throw new Exception("Order is empty");
+        }
 
         System.out.println("Customer: " + currentOrder.getCustomerName());
         System.out.println("Status: " +  currentOrder.getStatus());
@@ -77,8 +81,10 @@ public class ConsoleMenu {
         System.out.println("Total: " + currentOrder.calculateTotal());
     }
 
-    private void payOrder(){
-        // TODO: check if order exists
+    private void payOrder() throws Exception{
+        if(currentOrder == null){
+            throw new Exception("Order is empty");
+        }
 
         System.out.println("""
                 Select payment method:
@@ -109,14 +115,22 @@ public class ConsoleMenu {
         return PaymentMethodFactory.createCreditCardPayment(cardNumber,cardHolderName);
     }
 
-    private  PaymentMethod createPaypalPayment(){
-        // TODO
-        return null;
+    private PaymentMethod createPaypalPayment(){
+        System.out.println("Email:");
+        String email = scanner.nextLine();
+
+        return PaymentMethodFactory.createPayPalPayment(email);
     }
 
     private PaymentMethod createGiftCardPayment(){
-        // TODO
-        return null;
+        System.out.println("Code:");
+        String code = scanner.nextLine();
+
+        System.out.println("Balance:");
+        double balance = scanner.nextDouble();
+        scanner.nextLine();
+
+        return PaymentMethodFactory.createGiftCardPayment(code, balance);
     }
 
     private void printMenu(){
