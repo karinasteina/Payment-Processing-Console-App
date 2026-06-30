@@ -64,8 +64,10 @@ public class ConsoleMenu {
                 case 4 -> {
                     try {
                         payOrder();
-                        OrderHistory order = new OrderHistory(currentOrder, LocalDate.now());
-                        orderHistory.add(order);
+                        if(currentOrder.isPaid()){
+                            OrderHistory order = new OrderHistory(currentOrder, LocalDate.now());
+                            orderHistory.add(order);
+                        }
 
                     }catch (Exception e){
                         System.out.println(e.getMessage());
